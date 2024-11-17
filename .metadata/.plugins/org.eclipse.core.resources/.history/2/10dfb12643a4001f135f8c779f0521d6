@@ -1,0 +1,49 @@
+<%@ page import="java.sql.*" %>
+<%@ page import="com.example.DBConnection" %>
+<%
+    String name = request.getParameter("name");
+    String email = request.getParameter("email");
+    String password = request.getParameter("password");
+
+    if (name != null && email != null && password != null) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            String query = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+            ps = conn.prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, password);
+
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                response.sendRedirect("login.jsp");
+            } else {
+                out.println("회원가입에 실패했습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.println("에러 발생: " + e.getMessage());
+        } finally {
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        }
+    }
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>회원가입</title>
+</head>
+<body>
+    <h2>회원가입</h2>
+    <form action="register.jsp" method="post">
+        이름: <input type="text" name="name" required><br>
+        이메일: <input type="email" name="email" required><br>
+        비밀번호: <input type="password" name="password" required><br>
+        <button type="submit">회원가입</button>
+    </form>
+</body>
+</html>

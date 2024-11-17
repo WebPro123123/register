@@ -1,0 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="javax.servlet.http.Cookie" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+</head>
+<body>
+    <h1>메인 페이지</h1>
+    <%
+        Cookie[] cookies = request.getCookies();
+        String userEmail = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("userEmail")) {
+                    userEmail = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (userEmail != null) {
+            out.println("<p>환영합니다, " + userEmail + "님!</p>");
+        } else {
+            out.println("<p>로그인되지 않았습니다. <a href='login.jsp'>로그인</a></p>");
+        }
+    %>
+</body>
+</html>
